@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Avançado - Stellar Ads SDK</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #4a5568;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .demo-section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+        }
+        .demo-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        .code-block {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .btn.success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+        .btn.danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+        .info {
+            background: #e6fffa;
+            border: 1px solid #81e6d9;
+            border-radius: 6px;
+            padding: 15px;
+            color: #234e52;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #fffbeb;
+            border: 1px solid #f6cc56;
+            border-radius: 6px;
+            padding: 15px;
+            color: #744210;
+            margin: 15px 0;
+        }
+        .error {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            border-radius: 6px;
+            padding: 15px;
+            color: #742a2a;
+            margin: 15px 0;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-connected {
+            background: #48bb78;
+        }
+        .status-disconnected {
+            background: #f56565;
+        }
+        .status-pending {
+            background: #ed8936;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        #console-output {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Stellar Ads SDK - Demonstração Completa</h1>
+        <p class="subtitle">Sistema de anúncios descentralizados com recompensas Stellar</p>
+
+        <!-- Status da Conexão -->
+        <div id="connection-status" class="info">
+            <strong>🔗 Status da Conexão:</strong> 
+            <span class="status-indicator status-pending"></span>
+            <span id="status-text">Verificando conexão...</span>
+        </div>
+
+        <!-- Controles -->
+        <div class="controls">
+            <button class="btn" onclick="refreshAds()">🔄 Atualizar Anúncios</button>
+            <button class="btn" onclick="toggleDebug()">🐛 Toggle Debug</button>
+            <button class="btn" onclick="testWallet()">👛 Testar Carteira</button>
+            <button class="btn" onclick="checkApiHealth()">🏥 Status API</button>
+            <button class="btn" onclick="simulateClick()">👆 Simular Clique</button>
+            <button class="btn" onclick="clearConsole()">🧹 Limpar Console</button>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="containers-count">0</div>
+                <div class="stat-label">Containers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="impressions-count">0</div>
+                <div class="stat-label">Impressões</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="clicks-count">0</div>
+                <div class="stat-label">Cliques</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="rewards-earned">0.00</div>
+                <div class="stat-label">XLM Ganhos</div>
+            </div>
+        </div>
+
+        <!-- Console de Debug -->
+        <div class="demo-section">
+            <div class="demo-title">🔍 Console de Debug</div>
+            <div id="console-output"></div>
+        </div>
+
+        <!-- Exemplo 1: Container Médio com Site Demo 1 -->
+        <div class="demo-section">
+            <div class="demo-title">📺 Anúncio Médio (728x90) - Site Demo 1</div>
+            <div class="code-block">&lt;div data-site-id="demo-site-1" data-size="medium"&gt;&lt;/div&gt;</div>
+            <div data-site-id="demo-site-1" data-size="medium" id="container-1"></div>
+        </div>
+
+        <!-- Exemplo 2: Container com Tags -->
+        <div class="demo-section">
+            <div class="demo-title">🏷️ Anúncio com Tags (Tecnologia, Programação) - Site Demo 2</div>
+            <div class="code-block">&lt;div data-site-id="demo-site-2" data-tags="tecnologia,programacao" data-size="large"&gt;&lt;/div&gt;</div>
+            <div data-site-id="demo-site-2" data-tags="tecnologia,programacao" data-size="large" id="container-2"></div>
+        </div>
+
+        <!-- Exemplo 3: Container Pequeno -->
+        <div class="demo-section">
+            <div class="demo-title">📱 Anúncio Pequeno (300x250) - Site Demo 3</div>
+            <div class="code-block">&lt;div data-site-id="demo-site-3" data-size="small"&gt;&lt;/div&gt;</div>
+            <div data-site-id="demo-site-3" data-size="small" id="container-3"></div>
+        </div>
+
+        <!-- Exemplo 4: Container Responsivo -->
+        <div class="demo-section">
+            <div class="demo-title">📐 Anúncio Responsivo - Site Demo 4</div>
+            <div class="code-block">&lt;div data-site-id="demo-site-4" data-size="responsive"&gt;&lt;/div&gt;</div>
+            <div data-site-id="demo-site-4" data-size="responsive" id="container-4"></div>
+        </div>
+
+        <!-- Instruções de Implementação -->
+        <div class="info">
+            <strong>🔧 Configuração para Seu Site:</strong>
+            <div class="code-block">
+// 1. Inclua o SDK no seu HTML
+&lt;script src="https://api.stellarads.com/sdk.js"&gt;&lt;/script&gt;
+
+// 2. Adicione containers onde quiser anúncios
+&lt;div data-site-id="SEU_SITE_ID" data-size="medium"&gt;&lt;/div&gt;
+
+// 3. (Opcional) Configure parâmetros avançados
+&lt;script&gt;
+window.StellarAdsConfig = {
+    debug: false,
+    autoRefresh: true,
+    refreshInterval: 5
+};
+&lt;/script&gt;
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuração do SDK -->
+    <script>
+        let impressions = 0;
+        let clicks = 0;
+        let rewards = 0;
+
+        window.StellarAdsConfig = {
+            debug: true,
+            autoRefresh: false,
+            refreshInterval: 2
+        };
+
+        // Console personalizado
+        function logToConsole(message, type = 'info') {
+            const console = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const colorMap = {
+                info: '#e2e8f0',
+                success: '#48bb78',
+                error: '#f56565',
+                warning: '#ed8936'
+            };
+            
+            console.innerHTML += `<div style="color: ${colorMap[type]};">[${timestamp}] ${message}</div>`;
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function updateStats() {
+            document.getElementById('containers-count').textContent = 
+                window.StellarAdsSDK?.instance?.containers.size || 0;
+            document.getElementById('impressions-count').textContent = impressions;
+            document.getElementById('clicks-count').textContent = clicks;
+            document.getElementById('rewards-earned').textContent = rewards.toFixed(2);
+        }
+
+        function refreshAds() {
+            if (window.StellarAdsSDK && window.StellarAdsSDK.refresh) {
+                window.StellarAdsSDK.refresh();
+                logToConsole('🔄 Anúncios atualizados manualmente', 'info');
+            }
+        }
+
+        function toggleDebug() {
+            if (window.StellarAdsSDK && window.StellarAdsSDK.instance) {
+                const instance = window.StellarAdsSDK.instance;
+                instance.debug = !instance.debug;
+                logToConsole(`🐛 Debug mode: ${instance.debug ? 'ON' : 'OFF'}`, 'info');
+            }
+        }
+
+        function testWallet() {
+            if (window.stellar) {
+                window.stellar.getPublicKey().then(publicKey => {
+                    logToConsole(`👛 Carteira conectada: ${publicKey}`, 'success');
+                }).catch(error => {
+                    logToConsole(`❌ Erro na carteira: ${error.message}`, 'error');
+                });
+            } else {
+                logToConsole('⚠️ Carteira Stellar não encontrada', 'warning');
+            }
+        }
+
+        async function checkApiHealth() {
+            try {
+                const response = await fetch('http://localhost:3000/api/ad?siteId=demo-site-1');
+                if (response.ok) {
+                    logToConsole('✅ API de anúncios funcionando', 'success');
+                    updateConnectionStatus(true);
+                } else {
+                    logToConsole(`❌ API retornou status: ${response.status}`, 'error');
+                    updateConnectionStatus(false);
+                }
+            } catch (error) {
+                logToConsole(`❌ Erro na API: ${error.message}`, 'error');
+                updateConnectionStatus(false);
+            }
+        }
+
+        function simulateClick() {
+            clicks++;
+            rewards += 0.001; // Simular recompensa
+            updateStats();
+            logToConsole('👆 Clique simulado registrado', 'info');
+        }
+
+        function clearConsole() {
+            document.getElementById('console-output').innerHTML = '';
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusEl = document.getElementById('connection-status');
+            const textEl = document.getElementById('status-text');
+            const indicator = statusEl.querySelector('.status-indicator');
+            
+            if (connected) {
+                statusEl.className = 'info';
+                textEl.textContent = 'Conectado à API de anúncios';
+                indicator.className = 'status-indicator status-connected';
+            } else {
+                statusEl.className = 'error';
+                textEl.textContent = 'Erro de conexão com a API';
+                indicator.className = 'status-indicator status-disconnected';
+            }
+        }
+
+        // Simular carteira Stellar conectada
+        window.stellar = {
+            getPublicKey: () => Promise.resolve('GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ')
+        };
+
+        // Interceptar logs do SDK
+        const originalConsoleLog = console.log;
+        console.log = function(...args) {
+            if (args[0] && args[0].includes('[StellarAds SDK]')) {
+                logToConsole(args.join(' '), 'info');
+            }
+            return originalConsoleLog.apply(console, args);
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            logToConsole('🚀 Demonstração do Stellar Ads SDK iniciada', 'success');
+            checkApiHealth();
+            
+            // Atualizar estatísticas periodicamente
+            setInterval(updateStats, 1000);
+            
+            // Simular impressões periodicamente para demonstração
+            setInterval(() => {
+                impressions++;
+                if (Math.random() > 0.7) { // 30% chance de simular recompensa por impressão
+                    rewards += 0.0005;
+                }
+            }, 3000);
+        });
+
+    </script>
+
+    <!-- SDK -->
+    <script src="./sdk.js"></script>
+</body>
+</html>

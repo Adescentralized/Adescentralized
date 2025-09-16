@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Site Simples com Anúncio Lateral</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      background: #f9f9f9;
+      font-family: Arial, sans-serif;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      color: #333;
+    }
+    .ad-sidebar {
+      width: 300px;
+      background: #fff;
+      border-left: 1px solid #eee;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 0;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    Este é o conteúdo principal do site.
+  </div>
+  <div class="ad-sidebar">
+    <!-- Stellar Ads SDK -->
+    <div id="stellar-ad-container"
+         data-site-id="site_f235fb141e4849e2" data-size="small">
+        <!-- Anúncios serão carregados aqui -->
+    </div>
+    <script>
+      window.StellarAdsConfig = {
+          siteId: 'site_f235fb141e4849e2',
+          apiBaseUrl: 'http://localhost:3001',
+          debug: false
+      };
+    </script>
+    <script src="http://pulsestage-frontend.s3-website-us-east-1.amazonaws.com/sdk.js"></script>
+  </div>
+</body>
+</html>

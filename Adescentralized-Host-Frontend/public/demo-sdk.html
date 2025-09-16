@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo do SDK - Stellar Ads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .ad-examples {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .example-item {
+            border: 2px dashed #e1e5e9;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9ff;
+        }
+
+        .example-item h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .example-item p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .wallet-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+
+        .connected {
+            border-left: 4px solid #48bb78;
+            color: #48bb78;
+        }
+
+        .disconnected {
+            border-left: 4px solid #f56565;
+            color: #f56565;
+        }
+
+        .content-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .article {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .article h2 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .article p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <div class="wallet-status" id="walletStatus">
+        🔗 Carteira: Verificando...
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Demo do SDK Stellar Ads</h1>
+            <p>Demonstração em tempo real do SDK de anúncios descentralizados</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>📊 Diferentes Tamanhos de Anúncios</h2>
+            
+            <div class="ad-examples">
+                <div class="example-item">
+                    <h3>Anúncio Pequeno (300x250)</h3>
+                    <p>Ideal para sidebars e espaços compactos</p>
+                    <div class="code-block">&lt;div data-site-id="site_example_123" data-size="small" data-tags="tecnologia,programacao"&gt;&lt;/div&gt;</div>
+                    <div id="stellar-ad-small" 
+                         data-site-id="site_example_123" 
+                         data-size="small" 
+                         data-tags="tecnologia,programacao">
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <h3>Anúncio Médio (728x90)</h3>
+                    <p>Banner horizontal, perfeito para headers e footers</p>
+                    <div class="code-block">&lt;div data-site-id="site_example_123" data-size="medium" data-tags="blockchain,crypto"&gt;&lt;/div&gt;</div>
+                    <div id="stellar-ad-medium" 
+                         data-site-id="site_example_123" 
+                         data-size="medium" 
+                         data-tags="blockchain,crypto">
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <h3>Anúncio Grande (970x250)</h3>
+                    <p>Leaderboard para máximo impacto visual</p>
+                    <div class="code-block">&lt;div data-site-id="site_example_123" data-size="large" data-tags="startups,business"&gt;&lt;/div&gt;</div>
+                    <div id="stellar-ad-large" 
+                         data-site-id="site_example_123" 
+                         data-size="large" 
+                         data-tags="startups,business">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo simulado do site -->
+        <div class="content-section">
+            <div class="article">
+                <h2>O Futuro da Publicidade Blockchain</h2>
+                <p>
+                    A publicidade descentralizada representa uma revolução no modo como anunciantes e publishers interagem. 
+                    Com o Stellar Ads, eliminamos intermediários desnecessários e criamos um ecossistema mais justo para todos.
+                </p>
+                
+                <!-- Anúncio no meio do conteúdo -->
+                <div style="margin: 30px 0; text-align: center;">
+                    <div id="stellar-ad-content" 
+                         data-site-id="site_example_123" 
+                         data-size="medium" 
+                         data-tags="educacao,tecnologia">
+                    </div>
+                </div>
+
+                <p>
+                    Nossa plataforma utiliza contratos inteligentes na rede Stellar para garantir transparência total 
+                    nas transações. Cada clique, cada visualização é registrada de forma imutável na blockchain.
+                </p>
+
+                <p>
+                    Os usuários finais também são recompensados por sua atenção, recebendo tokens XLM por interagir 
+                    com anúncios relevantes. É um modelo win-win-win: anunciantes alcançam seu público, 
+                    publishers monetizam seu conteúdo e usuários são recompensados.
+                </p>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📈 Estatísticas em Tempo Real</h2>
+            <div class="stats" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Impressões</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Cliques</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0.00</div>
+                    <div class="stat-label">XLM Ganhos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0.0%</div>
+                    <div class="stat-label">CTR</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🛠️ Como Implementar</h2>
+            <div class="code-block">
+&lt;!-- 1. Adicione o container onde deseja exibir anúncios --&gt;
+&lt;div id="stellar-ad-container" 
+     data-site-id="SEU_SITE_ID" 
+     data-tags="suas,tags,aqui"
+     data-size="medium"&gt;
+&lt;/div&gt;
+
+&lt;!-- 2. Configure o SDK (opcional) --&gt;
+&lt;script&gt;
+window.StellarAdsConfig = {
+    siteId: 'SEU_SITE_ID',
+    debug: true,
+    autoRefresh: true,
+    refreshInterval: 5 // minutos
+};
+&lt;/script&gt;
+
+&lt;!-- 3. Carregue o SDK --&gt;
+&lt;script src="https://api.stellarads.com/sdk.js"&gt;&lt;/script&gt;
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuração do SDK para esta demo -->
+    <script>
+        window.StellarAdsConfig = {
+            siteId: 'site_example_123',
+            debug: true,
+            autoRefresh: false
+        };
+
+        // Simular estatísticas
+        let impressions = 0;
+        let clicks = 0;
+        let earnings = 0;
+
+        function updateStats() {
+            const ctr = impressions > 0 ? (clicks / impressions * 100).toFixed(1) : 0;
+            
+            document.querySelector('.stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${impressions}</div>
+                    <div class="stat-label">Impressões</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${clicks}</div>
+                    <div class="stat-label">Cliques</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${earnings.toFixed(2)}</div>
+                    <div class="stat-label">XLM Ganhos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${ctr}%</div>
+                    <div class="stat-label">CTR</div>
+                </div>
+            `;
+        }
+
+        // Simular atividade
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                impressions++;
+                earnings += 0.001 + Math.random() * 0.005;
+                
+                if (Math.random() > 0.85) {
+                    clicks++;
+                    earnings += 0.01 + Math.random() * 0.02;
+                }
+                
+                updateStats();
+            }
+        }, 3000);
+
+        // Verificar status da carteira
+        function checkWalletStatus() {
+            const statusElement = document.getElementById('walletStatus');
+            
+            if (typeof window.stellar !== 'undefined' || window.StellarWallet) {
+                statusElement.innerHTML = '🟢 Carteira: Conectada';
+                statusElement.className = 'wallet-status connected';
+            } else {
+                statusElement.innerHTML = '🔴 Carteira: Não conectada';
+                statusElement.className = 'wallet-status disconnected';
+            }
+        }
+
+        // Verificar periodicamente
+        setInterval(checkWalletStatus, 2000);
+        checkWalletStatus();
+    </script>
+
+    <!-- Carregar o SDK -->
+    <script src="/sdk.js"></script>
+</body>
+</html>
